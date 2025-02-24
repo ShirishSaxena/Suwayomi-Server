@@ -14,8 +14,14 @@ import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil.ImageType.JPEG
 import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil.ImageType.JXL
 import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil.ImageType.PNG
 import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil.ImageType.WEBP
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URLConnection
+import javax.imageio.ImageIO
+import kotlin.math.max
+import kotlin.math.min
 
 // adopted from: eu.kanade.tachiyomi.util.system.ImageUtil
 object ImageUtil {
@@ -164,5 +170,58 @@ object ImageUtil {
         JXL("image/jxl", "jxl"),
         PNG("image/png", "png"),
         WEBP("image/webp", "webp"),
+    }
+
+    fun autoCropBorders(
+        inputStream: InputStream,
+        margin: Int = 2,
+    ): InputStream {
+        val originalImage = ImageIO.read(inputStream) ?: throw IllegalArgumentException("Invalid image input")
+
+        val width = originalImage.width
+        val height = originalImage.height
+
+        var top = height
+        var left = width
+        var bottom = 0
+        var right = 0
+
+        // Convert image to grayscale for better edge detection
+        val grayscaleImage = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+        val g = grayscaleImage.graphics
+        g.drawImage(originalImage, 0, 0, null)
+        g.dispose()
+
+        // Scan for the bounding box of non-white pixels
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                val pixel = grayscaleImage.getRGB(x, y) and 0xFF // Extract grayscale value
+                if (pixel < 245) { // Consider anything below 250 as non-white
+                    if (x < left) left = x
+                    if (x > right) right = x
+                    if (y < top) top = y
+                    if (y > bottom) bottom = y
+                }
+            }
+        }
+
+        // Expand the bounding box slightly to add a small margin
+        top = max(0, top - margin)
+        left = max(0, left - margin)
+        bottom = min(height - 1, bottom + margin)
+        right = min(width - 1, right + margin)
+
+        // Ensure valid crop dimensions
+        if (top >= bottom || left >= right) {
+            return inputStream // Return original input if no cropping is needed
+        }
+
+        // Crop the image
+        val croppedImage = originalImage.getSubimage(left, top, right - left + 1, bottom - top + 1)
+
+        // Convert back to InputStream
+        val outputStream = ByteArrayOutputStream()
+        ImageIO.write(croppedImage, "png", outputStream)
+        return ByteArrayInputStream(outputStream.toByteArray())
     }
 }

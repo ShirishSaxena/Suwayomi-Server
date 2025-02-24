@@ -37,7 +37,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 object Opds {
-    private const val ITEMS_PER_PAGE = 20
+    private const val ITEMS_PER_PAGE = 100
 
     fun getRootFeed(baseUrl: String): String {
         val builder =
@@ -515,7 +515,9 @@ object Opds {
                     add(
                         OpdsXmlModels.Link(
                             rel = "http://vaemendis.net/opds-pse/stream",
-                            href = "/api/v1/manga/${manga.id}/chapter/${chapter.index}/page/{pageNumber}?updateProgress=true",
+                            href =
+                                "/api/v1/manga/${manga.id}/chapter/${chapter.index}/" +
+                                    "page/{pageNumber}?cropImage=true&updateProgress=true",
                             type = "image/jpeg",
                             pseCount = chapter.pageCount,
                             pseLastRead = chapter.lastPageRead.takeIf { it != 0 },
