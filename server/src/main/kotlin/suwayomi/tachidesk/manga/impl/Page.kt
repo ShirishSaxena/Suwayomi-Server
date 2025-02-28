@@ -18,6 +18,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import suwayomi.tachidesk.manga.impl.util.getChapterCachePath
 import suwayomi.tachidesk.manga.impl.util.source.GetCatalogueSource.getCatalogueSourceOrStub
+import suwayomi.tachidesk.manga.impl.util.storage.ImageAutoCrop
 import suwayomi.tachidesk.manga.impl.util.storage.ImageResponse.getImageResponse
 import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil
 import suwayomi.tachidesk.manga.model.table.ChapterTable
@@ -109,7 +110,7 @@ object Page {
             if (chapterEntry[ChapterTable.isDownloaded]) {
                 val image = ChapterDownloadHelper.getImage(mangaId, chapterId, index)
                 if (cropImage == true) {
-                    return ImageUtil.autoCropBorders(image.first) to image.second
+                    return ImageAutoCrop.autoCropBorders(image.first) to image.second
                 }
                 return image
             }
@@ -126,7 +127,7 @@ object Page {
             }
 
         if (cropImage == true) {
-            return ImageUtil.autoCropBorders(imageResponse.first) to imageResponse.second
+            return ImageAutoCrop.autoCropBorders(imageResponse.first) to imageResponse.second
         }
 
         return imageResponse
