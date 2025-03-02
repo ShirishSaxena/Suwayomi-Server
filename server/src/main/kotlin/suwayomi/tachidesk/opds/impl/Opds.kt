@@ -489,6 +489,7 @@ object Opds {
 
         val entryTitle =
             when {
+                isMetaDataEntry -> "⬇"
                 chapter.read -> "✅"
                 chapter.lastPageRead > 0 -> "⌛"
                 chapter.pageCount == 0 -> "❌"
