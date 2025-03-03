@@ -7,6 +7,7 @@ package suwayomi.tachidesk.manga.controller
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import io.javalin.http.HandlerType
 import io.javalin.http.HttpStatus
 import kotlinx.serialization.json.Json
 import suwayomi.tachidesk.manga.impl.CategoryManga
@@ -448,7 +449,11 @@ object MangaController {
                             ctx.header("Content-Type", "application/vnd.comicbook+zip")
                             ctx.header("Content-Disposition", "attachment; filename=\"$fileName\"")
                             ctx.header("Content-Length", fileSize.toString())
-                            ctx.result(inputStream)
+                            if (ctx.method() == HandlerType.HEAD) {
+                                ctx.status(200)
+                            } else {
+                                ctx.result(inputStream)
+                            }
                         }
                 }
             },
