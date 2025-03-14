@@ -507,7 +507,7 @@ object Opds {
                     add(
                         OpdsXmlModels.Link(
                             rel = "http://opds-spec.org/acquisition/open-access",
-                            href = "/api/v1/chapter/${chapter.id}/download",
+                            href = "/api/v1/chapter/${chapter.id}/download?markAsRead=true",
                             type = "application/vnd.comicbook+zip",
                         ),
                     )

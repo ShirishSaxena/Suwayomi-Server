@@ -436,15 +436,17 @@ object MangaController {
     val downloadChapter =
         handler(
             pathParam<Int>("chapterId"),
+            queryParam<Boolean?>("markAsRead"),
             documentWith = {
                 withOperation {
                     summary("Download chapter as CBZ")
                     description("Get the CBZ file of the specified chapter")
                 }
             },
-            behaviorOf = { ctx, chapterId ->
+            behaviorOf = { ctx, chapterId, markAsRead ->
+                val shouldMarkAsRead = if (ctx.method() == HandlerType.HEAD) false else markAsRead
                 ctx.future {
-                    future { ChapterDownloadHelper.getCbzForDownload(chapterId) }
+                    future { ChapterDownloadHelper.getCbzForDownload(chapterId, shouldMarkAsRead) }
                         .thenApply { (inputStream, fileName, fileSize) ->
                             ctx.header("Content-Type", "application/vnd.comicbook+zip")
                             ctx.header("Content-Disposition", "attachment; filename=\"$fileName\"")
