@@ -194,13 +194,10 @@ jobs:
           name: windows-x64
           path: release
 
-      - name: Checkout Preview branch
+      - name: Checkout current repository
         uses: actions/checkout@v4
         with:
-          repository: "Suwayomi/Suwayomi-Server-preview"
           ref: main
-          path: preview
-          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
 
       - name: Generate Tag Name
         id: GenTagName
