@@ -18,7 +18,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import suwayomi.tachidesk.manga.impl.util.getChapterCachePath
 import suwayomi.tachidesk.manga.impl.util.source.GetCatalogueSource.getCatalogueSourceOrStub
-import suwayomi.tachidesk.manga.impl.util.storage.ImageAutoCrop
 import suwayomi.tachidesk.manga.impl.util.storage.ImageResponse.getImageResponse
 import suwayomi.tachidesk.manga.impl.util.storage.ImageUtil
 import suwayomi.tachidesk.manga.model.table.ChapterTable
@@ -46,7 +45,6 @@ object Page {
         mangaId: Int,
         chapterIndex: Int,
         index: Int,
-        cropImage: Boolean? = false,
         progressFlow: ((StateFlow<Int>) -> Unit)? = null,
     ): Pair<InputStream, String> {
         val mangaEntry = transaction { MangaTable.selectAll().where { MangaTable.id eq mangaId }.first() }
@@ -108,11 +106,7 @@ object Page {
 
         try {
             if (chapterEntry[ChapterTable.isDownloaded]) {
-                val image = ChapterDownloadHelper.getImage(mangaId, chapterId, index)
-                if (cropImage == true) {
-                    return ImageAutoCrop.autoCropBorders(image.first) to image.second
-                }
-                return image
+                return ChapterDownloadHelper.getImage(mangaId, chapterId, index)
             }
         } catch (_: Exception) {
             // ignore and fetch again
@@ -121,16 +115,9 @@ object Page {
         val cacheSaveDir = getChapterCachePath(mangaId, chapterId)
 
         // Note: don't care about invalidating cache because OS cache is not permanent
-        val imageResponse =
-            getImageResponse(cacheSaveDir, fileName) {
-                source.getImage(tachiyomiPage)
-            }
-
-        if (cropImage == true) {
-            return ImageAutoCrop.autoCropBorders(imageResponse.first) to imageResponse.second
+        return getImageResponse(cacheSaveDir, fileName) {
+            source.getImage(tachiyomiPage)
         }
-
-        return imageResponse
     }
 
     /** converts 0 to "001" */
