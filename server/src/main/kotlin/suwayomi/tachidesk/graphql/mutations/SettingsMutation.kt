@@ -177,6 +177,11 @@ class SettingsMutation {
         updateSetting(settings.flareSolverrSessionName, serverConfig.flareSolverrSessionName)
         updateSetting(settings.flareSolverrSessionTtl, serverConfig.flareSolverrSessionTtl)
         updateSetting(settings.flareSolverrAsResponseFallback, serverConfig.flareSolverrAsResponseFallback)
+
+        updateSetting(settings.opdsItemsPerPage, serverConfig.opdsItemsPerPage)
+        updateSetting(settings.opdsStreamingPageReadProgress, serverConfig.opdsStreamingPageReadProgress)
+        updateSetting(settings.opdsStreamingPageCropImage, serverConfig.opdsStreamingPageCropImage)
+        updateSetting(settings.opdsDownloadMarkAsRead, serverConfig.opdsDownloadMarkAsRead)
     }
 
     fun setSettings(input: SetSettingsInput): SetSettingsPayload {

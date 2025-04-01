@@ -18,3 +18,11 @@ val ApplicationRootDir: String
             AppDirsFactory.getInstance().getUserDataDir("Tachidesk", null, null),
         )
     }
+
+val ApplicationTempDir: String
+    get(): String {
+        return System.getProperty(
+            "$CONFIG_PREFIX.server.tempDir",
+            "${System.getProperty("java.io.tmpdir")}/Tachidesk",
+        )
+    }

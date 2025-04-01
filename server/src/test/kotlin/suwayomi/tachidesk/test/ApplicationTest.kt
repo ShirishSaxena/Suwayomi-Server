@@ -59,6 +59,7 @@ open class ApplicationTest {
             val applicationDirs = ApplicationDirs()
 
             logger.debug { "Data Root directory is set to: ${applicationDirs.dataRoot}" }
+            logger.debug { "Data Temp directory is set to: ${applicationDirs.tempRoot}" }
 
             // make dirs we need
             listOf(
