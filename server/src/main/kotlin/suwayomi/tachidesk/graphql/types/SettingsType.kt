@@ -95,6 +95,12 @@ interface Settings : Node {
     val flareSolverrSessionName: String?
     val flareSolverrSessionTtl: Int?
     val flareSolverrAsResponseFallback: Boolean?
+
+    // opds config
+    val opdsItemsPerPage: Int?
+    val opdsStreamingPageReadProgress: Boolean?
+    val opdsStreamingPageCropImage: Boolean?
+    val opdsDownloadMarkAsRead: Boolean?
 }
 
 data class PartialSettingsType(
@@ -162,6 +168,11 @@ data class PartialSettingsType(
     override val flareSolverrSessionName: String?,
     override val flareSolverrSessionTtl: Int?,
     override val flareSolverrAsResponseFallback: Boolean?,
+    // opds config
+    override val opdsItemsPerPage: Int?,
+    override val opdsStreamingPageReadProgress: Boolean?,
+    override val opdsStreamingPageCropImage: Boolean?,
+    override val opdsDownloadMarkAsRead: Boolean?,
 ) : Settings
 
 class SettingsType(
@@ -229,6 +240,11 @@ class SettingsType(
     override val flareSolverrSessionName: String,
     override val flareSolverrSessionTtl: Int,
     override val flareSolverrAsResponseFallback: Boolean,
+    // opds config
+    override val opdsItemsPerPage: Int?,
+    override val opdsStreamingPageReadProgress: Boolean?,
+    override val opdsStreamingPageCropImage: Boolean?,
+    override val opdsDownloadMarkAsRead: Boolean?,
 ) : Settings {
     constructor(config: ServerConfig = serverConfig) : this(
         config.ip.value,
@@ -290,5 +306,10 @@ class SettingsType(
         config.flareSolverrSessionName.value,
         config.flareSolverrSessionTtl.value,
         config.flareSolverrAsResponseFallback.value,
+        // opds settings
+        config.opdsItemsPerPage.value,
+        config.opdsStreamingPageReadProgress.value,
+        config.opdsStreamingPageCropImage.value,
+        config.opdsDownloadMarkAsRead.value,
     )
 }
