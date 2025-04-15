@@ -155,6 +155,12 @@ class ServerConfig(
     val flareSolverrSessionTtl: MutableStateFlow<Int> by OverrideConfigValue(IntConfigAdapter)
     val flareSolverrAsResponseFallback: MutableStateFlow<Boolean> by OverrideConfigValue(BooleanConfigAdapter)
 
+    // opds settings
+    val opdsItemsPerPage: MutableStateFlow<Int> by OverrideConfigValue(IntConfigAdapter)
+    val opdsStreamingPageReadProgress: MutableStateFlow<Boolean> by OverrideConfigValue(BooleanConfigAdapter)
+    val opdsStreamingPageCropImage: MutableStateFlow<Boolean> by OverrideConfigValue(BooleanConfigAdapter)
+    val opdsDownloadMarkAsRead: MutableStateFlow<Boolean> by OverrideConfigValue(BooleanConfigAdapter)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun <T> subscribeTo(
         flow: Flow<T>,
