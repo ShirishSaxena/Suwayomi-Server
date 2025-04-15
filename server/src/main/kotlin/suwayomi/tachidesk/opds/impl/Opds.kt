@@ -85,6 +85,7 @@ object Opds {
                         .select(MangaTable.columns)
                         .where {
                             val conditions = mutableListOf<Op<Boolean>>()
+                            conditions += (MangaTable.inLibrary eq true)
 
                             criteria?.query?.takeIf { it.isNotBlank() }?.let { q ->
                                 val lowerQ = q.lowercase()
@@ -103,7 +104,7 @@ object Opds {
                                 conditions += (MangaTable.title.lowerCase() like "%${title.lowercase()}%")
                             }
 
-                            if (conditions.isEmpty()) (MangaTable.inLibrary eq true) else conditions.reduce { acc, op -> acc and op }
+                            conditions.reduce { acc, op -> acc and op }
                         }.groupBy(MangaTable.id)
                         .orderBy(MangaTable.title to SortOrder.ASC)
                 val totalCount = query.count()
