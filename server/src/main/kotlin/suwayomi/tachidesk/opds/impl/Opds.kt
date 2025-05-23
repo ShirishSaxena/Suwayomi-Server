@@ -543,7 +543,8 @@ object Opds {
                             rel = "http://vaemendis.net/opds-pse/stream",
                             href =
                                 "/api/v1/manga/${manga.id}/chapter/${chapter.index}/page/{pageNumber}" +
-                                    "?updateProgress=${serverConfig.opdsEnablePageReadProgress.value}",
+                                    "?updateProgress=${serverConfig.opdsEnablePageReadProgress.value}" +
+                                    "&cropImage=true",
                             type = "image/jpeg",
                             pseCount = chapter.pageCount,
                             pseLastRead = chapter.lastPageRead.takeIf { it != 0 },
