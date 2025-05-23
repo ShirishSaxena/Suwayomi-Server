@@ -403,7 +403,6 @@ object MangaController {
             pathParam<Int>("chapterIndex"),
             pathParam<Int>("index"),
             queryParam<Boolean?>("updateProgress"),
-            queryParam<Boolean?>("cropImage"),
             documentWith = {
                 withOperation {
                     summary("Get a chapter page")
@@ -412,9 +411,9 @@ object MangaController {
                     )
                 }
             },
-            behaviorOf = { ctx, mangaId, chapterIndex, index, updateProgress, cropImage ->
+            behaviorOf = { ctx, mangaId, chapterIndex, index, updateProgress ->
                 ctx.future {
-                    future { Page.getPageImage(mangaId, chapterIndex, index, cropImage, null) }
+                    future { Page.getPageImage(mangaId, chapterIndex, index, null) }
                         .thenApply {
                             ctx.header("content-type", it.second)
                             val httpCacheSeconds = 1.days.inWholeSeconds
@@ -452,6 +451,7 @@ object MangaController {
                             ctx.header("Content-Disposition", "attachment; filename=\"$fileName\"")
                             ctx.header("Content-Length", fileSize.toString())
                             if (ctx.method() == HandlerType.HEAD) {
+                                inputStream.close()
                                 ctx.status(200)
                             } else {
                                 ctx.result(inputStream)

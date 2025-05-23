@@ -8,12 +8,10 @@
 package suwayomi.tachidesk.graphql.types
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDeprecated
+import org.jetbrains.exposed.sql.SortOrder
 import suwayomi.tachidesk.graphql.server.primitives.Node
 import suwayomi.tachidesk.server.ServerConfig
 import suwayomi.tachidesk.server.serverConfig
-import suwayomi.tachidesk.server.util.WebUIChannel
-import suwayomi.tachidesk.server.util.WebUIFlavor
-import suwayomi.tachidesk.server.util.WebUIInterface
 
 interface Settings : Node {
     val ip: String?
@@ -96,11 +94,13 @@ interface Settings : Node {
     val flareSolverrSessionTtl: Int?
     val flareSolverrAsResponseFallback: Boolean?
 
-    // opds config
+    // opds
     val opdsItemsPerPage: Int?
-    val opdsStreamingPageReadProgress: Boolean?
-    val opdsStreamingPageCropImage: Boolean?
-    val opdsDownloadMarkAsRead: Boolean?
+    val opdsEnablePageReadProgress: Boolean?
+    val opdsMarkAsReadOnDownload: Boolean?
+    val opdsShowOnlyUnreadChapters: Boolean?
+    val opdsShowOnlyDownloadedChapters: Boolean?
+    val opdsChapterSortOrder: SortOrder?
 }
 
 data class PartialSettingsType(
@@ -168,11 +168,13 @@ data class PartialSettingsType(
     override val flareSolverrSessionName: String?,
     override val flareSolverrSessionTtl: Int?,
     override val flareSolverrAsResponseFallback: Boolean?,
-    // opds config
+    // opds
     override val opdsItemsPerPage: Int?,
-    override val opdsStreamingPageReadProgress: Boolean?,
-    override val opdsStreamingPageCropImage: Boolean?,
-    override val opdsDownloadMarkAsRead: Boolean?,
+    override val opdsEnablePageReadProgress: Boolean?,
+    override val opdsMarkAsReadOnDownload: Boolean?,
+    override val opdsShowOnlyUnreadChapters: Boolean?,
+    override val opdsShowOnlyDownloadedChapters: Boolean?,
+    override val opdsChapterSortOrder: SortOrder?,
 ) : Settings
 
 class SettingsType(
@@ -240,11 +242,13 @@ class SettingsType(
     override val flareSolverrSessionName: String,
     override val flareSolverrSessionTtl: Int,
     override val flareSolverrAsResponseFallback: Boolean,
-    // opds config
-    override val opdsItemsPerPage: Int?,
-    override val opdsStreamingPageReadProgress: Boolean?,
-    override val opdsStreamingPageCropImage: Boolean?,
-    override val opdsDownloadMarkAsRead: Boolean?,
+    // opds
+    override val opdsItemsPerPage: Int,
+    override val opdsEnablePageReadProgress: Boolean,
+    override val opdsMarkAsReadOnDownload: Boolean,
+    override val opdsShowOnlyUnreadChapters: Boolean,
+    override val opdsShowOnlyDownloadedChapters: Boolean,
+    override val opdsChapterSortOrder: SortOrder,
 ) : Settings {
     constructor(config: ServerConfig = serverConfig) : this(
         config.ip.value,
@@ -306,10 +310,12 @@ class SettingsType(
         config.flareSolverrSessionName.value,
         config.flareSolverrSessionTtl.value,
         config.flareSolverrAsResponseFallback.value,
-        // opds settings
+        // opds
         config.opdsItemsPerPage.value,
-        config.opdsStreamingPageReadProgress.value,
-        config.opdsStreamingPageCropImage.value,
-        config.opdsDownloadMarkAsRead.value,
+        config.opdsEnablePageReadProgress.value,
+        config.opdsMarkAsReadOnDownload.value,
+        config.opdsShowOnlyUnreadChapters.value,
+        config.opdsShowOnlyDownloadedChapters.value,
+        config.opdsChapterSortOrder.value,
     )
 }

@@ -1,20 +1,23 @@
 package suwayomi.tachidesk.graphql.queries
 
+import com.expediagroup.graphql.generator.annotations.GraphQLDeprecated
 import suwayomi.tachidesk.global.impl.AppUpdate
 import suwayomi.tachidesk.graphql.types.AboutWebUI
+import suwayomi.tachidesk.graphql.types.WebUIChannel
+import suwayomi.tachidesk.graphql.types.WebUIFlavor
 import suwayomi.tachidesk.graphql.types.WebUIUpdateCheck
 import suwayomi.tachidesk.graphql.types.WebUIUpdateStatus
 import suwayomi.tachidesk.server.JavalinSetup.future
 import suwayomi.tachidesk.server.generated.BuildConfig
 import suwayomi.tachidesk.server.serverConfig
 import suwayomi.tachidesk.server.util.WebInterfaceManager
-import suwayomi.tachidesk.server.util.WebUIFlavor
 import java.util.concurrent.CompletableFuture
 
 class InfoQuery {
     data class AboutServerPayload(
         val name: String,
         val version: String,
+        @GraphQLDeprecated("The version includes the revision as the patch number")
         val revision: String,
         val buildType: String,
         val buildTime: Long,
@@ -60,7 +63,7 @@ class InfoQuery {
         future {
             val (version, updateAvailable) = WebInterfaceManager.isUpdateAvailable(WebUIFlavor.current, raiseError = true)
             WebUIUpdateCheck(
-                channel = serverConfig.webUIChannel.value,
+                channel = WebUIChannel.from(serverConfig.webUIChannel.value),
                 tag = version,
                 updateAvailable,
             )
