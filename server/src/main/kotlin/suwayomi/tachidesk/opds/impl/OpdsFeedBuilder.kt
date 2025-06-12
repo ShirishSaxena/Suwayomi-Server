@@ -661,6 +661,7 @@ object OpdsFeedBuilder {
             when {
                 chapter.read -> MR.strings.opds_chapter_status_read
                 chapter.lastPageRead > 0 -> MR.strings.opds_chapter_status_in_progress
+                chapter.pageCount == 0 -> MR.strings.opds_chapter_status_unknown
                 else -> MR.strings.opds_chapter_status_unread
             }
         val titlePrefix = statusKey.localized(locale)
@@ -715,6 +716,8 @@ object OpdsFeedBuilder {
         val statusKey =
             when {
                 chapter.downloaded -> MR.strings.opds_chapter_status_downloaded
+                chapter.pageCount > 0 -> MR.strings.opds_chapter_status_streamable_entry
+                chapter.pageCount <= 0 -> MR.strings.opds_chapter_status_error
                 chapter.read -> MR.strings.opds_chapter_status_read
                 chapter.lastPageRead > 0 -> MR.strings.opds_chapter_status_in_progress
                 else -> MR.strings.opds_chapter_status_unread
@@ -765,7 +768,9 @@ object OpdsFeedBuilder {
             links.add(
                 OpdsLinkXml(
                     OpdsConstants.LINK_REL_PSE_STREAM,
-                    "/api/v1/manga/${manga.id}/chapter/${chapter.sourceOrder}/page/{pageNumber}?updateProgress=${serverConfig.opdsEnablePageReadProgress.value}",
+                    "/api/v1/manga/${manga.id}/chapter/${chapter.sourceOrder}/page/{pageNumber}" +
+                        "?updateProgress=${serverConfig.opdsEnablePageReadProgress.value}" +
+                        "&cropImage=true",
                     OpdsConstants.TYPE_IMAGE_JPEG,
                     MR.strings.opds_linktitle_stream_pages.localized(locale),
                     pseCount = chapter.pageCount,
