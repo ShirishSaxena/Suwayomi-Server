@@ -68,6 +68,7 @@
     <string name="opds_chapter_status_error">⚠️ </string>
     <string name="opds_chapter_status_unknown">❔ </string>
     <string name="opds_chapter_status_unread">⭕ </string>
+    <string name="opds_chapter_status_streamable_entry">▶️ </string>
 
     <string name="opds_chapter_details_base">%1$s | %2$s</string>
     <string name="opds_chapter_details_scanlator"> | By %1$s</string>

@@ -39,6 +39,7 @@ import xyz.nulldev.androidcompat.AndroidCompat
 import xyz.nulldev.androidcompat.AndroidCompatInitializer
 import xyz.nulldev.androidcompat.androidCompatModule
 import xyz.nulldev.ts.config.ApplicationRootDir
+import xyz.nulldev.ts.config.ApplicationTempDir
 import xyz.nulldev.ts.config.BASE_LOGGER_NAME
 import xyz.nulldev.ts.config.GlobalConfigManager
 import xyz.nulldev.ts.config.configManagerModule
@@ -55,7 +56,7 @@ private val logger = KotlinLogging.logger {}
 
 class ApplicationDirs(
     val dataRoot: String = ApplicationRootDir,
-    val tempRoot: String = "${System.getProperty("java.io.tmpdir")}/Tachidesk",
+    val tempRoot: String = ApplicationTempDir,
 ) {
     val extensionsRoot = "$dataRoot/extensions"
     val downloadsRoot get() = serverConfig.downloadsPath.value.ifBlank { "$dataRoot/downloads" }
@@ -149,6 +150,7 @@ fun applicationSetup() {
     }
 
     logger.debug { "Data Root directory is set to: ${applicationDirs.dataRoot}" }
+    logger.debug { "Data Temp directory is set to: ${applicationDirs.tempRoot}" }
 
     // Migrate Directories from old versions
     File("$ApplicationRootDir/manga-thumbnails").renameTo(applicationDirs.tempThumbnailCacheRoot)
